@@ -1,0 +1,1 @@
+function c(e,n){const t=URL.createObjectURL(e),o=document.createElement("a");o.href=t,o.download=n,document.body.appendChild(o),o.click(),o.remove(),setTimeout(()=>URL.revokeObjectURL(t),3e4)}function d(e){return e<1024*1024?`${(e/1024).toFixed(1)} KB`:`${(e/1024/1024).toFixed(2)} MB`}export{c as d,d as f};

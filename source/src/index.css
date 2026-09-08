@@ -1,0 +1,395 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.compact-actions { display:flex; flex-wrap:wrap; align-items:center; gap:16px; padding:16px 0; }
+.compact-actions label { display:flex; align-items:center; gap:8px; font-size:14px; }
+.compact-actions input:not([type=range]), .compact-actions select { border:1px solid #cbd5e1; border-radius:8px; padding:8px; max-width:220px; background:white; }
+.recovery-button { background:#1e5aaf; color:white; padding:10px 20px; border-radius:8px; }
+.upload-dropzone:focus-within { outline:2px solid #1e5aaf; outline-offset:3px; }
+.page-order-item { border:1px solid #dbe3ef; border-radius:8px; background:white; }
+.page-order-actions { display:flex; }
+.thumbnail-rail .page-order-actions button { justify-content:center; padding:2px; font-size:18px; }
+.page-order-actions button:disabled { opacity:.25; }
+.editor-stage-viewport { justify-content:flex-start !important; }
+.converter-item { min-width:0; gap:12px; }
+.converter-item strong { overflow-wrap:anywhere; }
+@media (max-width: 1023px) {
+  .pdf-workspace .thumbnail-rail { display:flex; max-height:120px; gap:8px; overflow:auto; }
+  .page-order-item { min-width:100px; }
+}
+@media (max-width: 700px) {
+  .export-panel > div:last-child, .converter-queue-head { flex-wrap:wrap; }
+  .converter-item { flex-wrap:wrap; }
+  .compact-actions { align-items:stretch; }
+  .editor-commandbar { position:static !important; }
+  .editor-stage-viewport { max-height:65vh !important; }
+}
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior:auto !important; animation-duration:.01ms !important; transition-duration:.01ms !important; } }
+ 
+@layer base {
+  :root {
+    --background: 210 33% 98%;
+    --foreground: 222 38% 14%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+ 
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+ 
+    --primary: 215 72% 43%;
+    --primary-foreground: 210 40% 98%;
+ 
+    --secondary: 214 45% 95%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+ 
+    --muted: 214 28% 94%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+ 
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+ 
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214 27% 88%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+ 
+    --radius: 0.75rem;
+  }
+ 
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+ 
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+ 
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+ 
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+ 
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+ 
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+ 
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+ 
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+ 
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+  }
+}
+ 
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    min-width: 320px;
+    font-family: "Segoe UI", "Microsoft YaHei UI", sans-serif;
+    background-image: radial-gradient(circle at 50% 0%, hsl(215 75% 96%) 0, transparent 34rem);
+  }
+  button, a, input { @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2; }
+}
+
+@layer components {
+  .app-nav { @apply sticky top-0 z-50 border-b border-border/80 bg-white/90 backdrop-blur-xl; }
+  .nav-inner { @apply mx-auto flex min-h-16 max-w-[1500px] items-center justify-between gap-6 px-5 lg:px-8; }
+  .brand { @apply flex shrink-0 items-center gap-3 text-foreground; }
+  .brand > span:last-child { @apply flex flex-col leading-tight; }
+  .brand small { @apply mt-0.5 text-[10px] font-medium tracking-wider text-muted-foreground; }
+  .brand-mark { @apply grid h-9 w-9 place-items-center rounded-xl bg-primary text-primary-foreground shadow-sm; }
+  .brand-mark svg { @apply h-5 w-5; }
+  .primary-nav { @apply flex items-center gap-1 rounded-xl bg-muted/70 p-1; }
+  .primary-nav-link { @apply rounded-lg px-4 py-2 text-sm font-semibold text-muted-foreground transition-colors duration-150 hover:bg-white hover:text-foreground; }
+  .primary-nav-link.active { @apply bg-white text-primary shadow-sm; }
+  .sub-nav-wrap { @apply border-t border-border/60 bg-white/80; }
+  .sub-nav { @apply mx-auto flex max-w-[1500px] items-center gap-1 overflow-x-auto px-5 py-2 lg:px-8; }
+  .sub-nav-link { @apply flex shrink-0 items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground; }
+  .sub-nav-link svg { @apply h-3.5 w-3.5; }
+  .sub-nav-link.active { @apply bg-primary/10 text-primary; }
+
+  .tool-page { @apply mx-auto max-w-[1500px] space-y-6 px-5 py-8 lg:px-8; }
+  .page-intro { @apply flex items-end justify-between gap-6 py-3; }
+  .page-intro h1 { @apply text-3xl font-bold tracking-tight md:text-4xl; }
+  .intro-stat { @apply hidden min-w-36 rounded-2xl border bg-white px-5 py-4 text-right shadow-sm sm:flex sm:flex-col; }
+  .intro-stat strong { @apply text-2xl; }
+  .intro-stat span { @apply text-xs text-muted-foreground; }
+
+  .upload-card { @apply border-dashed bg-white/65 p-3 shadow-none; }
+  .upload-dropzone { @apply cursor-pointer rounded-xl border border-dashed border-primary/30 px-6 py-7 text-center transition-colors duration-150 hover:border-primary hover:bg-primary/5; }
+  .document-drop-surface.dragging { @apply outline outline-4 outline-offset-[-4px] outline-primary/50; }
+  .file-banner { @apply flex items-center justify-between rounded-xl border bg-white px-4 py-3 shadow-sm; }
+  .file-kind { @apply grid h-10 w-10 place-items-center rounded-lg bg-red-50 text-[11px] font-extrabold text-red-600; }
+
+  .pdf-workspace { @apply overflow-hidden rounded-2xl border bg-white shadow-[0_18px_50px_-32px_rgba(15,23,42,.35)]; }
+  .pdf-toolbar { @apply flex flex-col gap-4 border-b bg-white px-5 py-4 sm:flex-row sm:items-center sm:justify-between; }
+  .pdf-toolbar h2 { @apply text-lg font-semibold; }
+  .toolbar-actions { @apply flex flex-wrap items-center gap-1; }
+  .toolbar-actions button { @apply grid h-9 min-w-9 place-items-center rounded-lg border bg-white px-2 text-sm text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary; }
+  .toolbar-actions button svg { @apply h-4 w-4; }
+  .toolbar-actions .text-action { @apply ml-1 px-3; }
+  .page-indicator { @apply mr-2 rounded-lg bg-muted px-3 py-2 text-xs font-semibold tabular-nums; }
+  .zoom-value { @apply w-12 text-center text-xs tabular-nums text-muted-foreground; }
+  .pdf-workspace-body { @apply grid min-h-[70vh] grid-cols-1 lg:grid-cols-[144px_minmax(0,1fr)_220px]; }
+
+  .thumbnail-rail { @apply hidden max-h-[75vh] space-y-2 overflow-y-auto border-r bg-slate-50/80 p-3 lg:block; }
+  .thumbnail-rail button { @apply flex w-full items-center gap-2 rounded-lg border border-transparent px-3 py-2 text-left transition-colors hover:bg-white; }
+  .thumbnail-rail button > span { @apply grid h-7 w-7 shrink-0 place-items-center rounded-md bg-white text-xs font-bold shadow-sm; }
+  .thumbnail-rail button small { @apply truncate text-[11px] text-muted-foreground; }
+  .thumbnail-rail button.active { @apply border-primary/30 bg-white text-primary shadow-sm; }
+  .thumbnail-rail button.deleted { @apply border-red-200 bg-red-50 text-red-600 line-through; }
+
+  .pdf-scroll { @apply max-h-[75vh] scroll-smooth overflow-auto bg-slate-200/70 p-4 md:p-7; }
+  .pdf-page-shell { @apply mx-auto mb-7 max-w-fit scroll-mt-5; }
+  .pdf-page-heading { @apply mb-2 flex items-center justify-between gap-5 text-xs text-muted-foreground; }
+  .pdf-page-heading > div { @apply flex min-w-0 items-center gap-3; }
+  .pdf-page-heading strong { @apply shrink-0 text-foreground; }
+  .pdf-page-heading span { @apply truncate; }
+  .page-action { @apply shrink-0 rounded-md px-2.5 py-1.5 text-xs font-semibold text-red-600 transition-colors hover:bg-red-50; }
+  .page-action.restore { @apply text-primary hover:bg-primary/5; }
+  .pdf-canvas-wrap { @apply relative overflow-hidden rounded-sm bg-white shadow-[0_8px_30px_rgba(15,23,42,.15)]; }
+  .pdf-canvas-wrap canvas { @apply block max-w-none transition-opacity; }
+  .deleted-overlay { @apply absolute inset-0 grid place-items-center bg-red-950/25 backdrop-grayscale; }
+  .deleted-overlay span { @apply rounded-full bg-red-600 px-4 py-2 text-sm font-bold text-white shadow-lg; }
+  .pdf-page-shell.is-deleted .pdf-canvas-wrap { @apply ring-2 ring-red-500; }
+  .pdf-render-error { @apply grid min-h-80 min-w-60 place-items-center p-8 text-sm text-red-600; }
+
+  .selection-summary { @apply border-t bg-white p-5 lg:border-l lg:border-t-0; }
+  .selection-summary strong { @apply text-xl; }
+  .selection-summary > div:first-child > p:last-child { @apply mt-1 text-xs leading-5 text-muted-foreground; }
+  .deleted-list { @apply mt-5 max-h-72 space-y-1 overflow-y-auto; }
+  .deleted-list button { @apply flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs text-red-600 hover:bg-red-50; }
+  .deleted-list svg, .reset-action svg { @apply h-3.5 w-3.5; }
+  .reset-action { @apply mt-4 flex items-center gap-2 text-xs font-semibold text-primary; }
+  .empty-copy { @apply mt-5 rounded-xl bg-muted/60 p-3 text-xs leading-5 text-muted-foreground; }
+
+  .workspace-loading { @apply grid min-h-52 place-items-center rounded-2xl border bg-white p-8 text-sm text-muted-foreground; }
+  .loading-bar { @apply h-1.5 w-40 overflow-hidden rounded-full bg-muted after:block after:h-full after:w-1/2 after:animate-pulse after:rounded-full after:bg-primary; }
+  .workspace-error { @apply rounded-xl border border-red-200 bg-red-50 p-5 text-red-800; }
+  .workspace-error p { @apply mt-1 text-sm text-red-700; }
+  .export-panel { @apply sticky bottom-4 z-20 flex flex-col gap-4 border bg-white/95 p-5 shadow-[0_12px_36px_rgba(15,23,42,.14)] backdrop-blur md:flex-row md:items-center md:justify-between; }
+  .image-pdf-list { @apply overflow-hidden bg-white p-0; }
+  .image-pdf-list-head { @apply flex items-center justify-between gap-4 border-b px-5 py-4; }
+  .image-pdf-list-head h2 { @apply font-semibold; }
+  .image-pdf-list-head p { @apply mt-1 text-xs text-muted-foreground; }
+  .image-pdf-grid { @apply divide-y; }
+  .image-pdf-item { @apply grid grid-cols-[72px_minmax(0,1fr)] items-center gap-4 p-4 md:grid-cols-[80px_minmax(0,1fr)_auto]; }
+  .image-pdf-item > img { @apply h-20 w-20 rounded-lg border bg-muted object-contain; }
+  .image-pdf-info { @apply flex min-w-0 flex-col; }
+  .image-pdf-info strong { @apply truncate text-sm; }
+  .image-pdf-info span { @apply mt-1 text-xs text-muted-foreground; }
+  .image-pdf-info small { @apply mt-2 truncate text-xs font-medium text-primary; }
+  .image-pdf-actions { @apply col-span-2 flex flex-wrap items-center justify-end gap-1 md:col-span-1; }
+  .format-converter { @apply mx-auto w-full max-w-[1500px]; }
+  .converter-tabs { @apply mx-auto mt-5 flex w-fit max-w-full gap-1 overflow-x-auto rounded-xl border bg-white p-1 shadow-sm; }
+  .converter-tabs button { @apply flex shrink-0 items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold text-muted-foreground hover:bg-muted; }
+  .converter-tabs button.active { @apply bg-primary text-primary-foreground; }
+  .converter-tabs svg { @apply h-4 w-4; }
+  .converter-dropzone { @apply relative flex min-h-52 flex-col items-center justify-center gap-2 border-dashed p-8 text-center transition-colors; }
+  .converter-dropzone.dragging { @apply border-primary bg-primary/5; }
+  .converter-dropzone > svg { @apply h-10 w-10 text-primary; }
+  .converter-dropzone > span { @apply text-xs text-muted-foreground; }
+  .converter-dropzone input { @apply absolute inset-0 cursor-pointer opacity-0; }
+  .converter-limit { @apply mt-4 rounded-lg border border-amber-200 bg-amber-50 p-3 text-xs leading-5 text-amber-900; }
+  .converter-queue { @apply mt-5 overflow-hidden p-0; }
+  .converter-queue-head { @apply flex flex-wrap items-center justify-between gap-3 border-b p-4; }
+  .converter-queue-head > div { @apply flex flex-wrap gap-2; }
+  .converter-item { @apply flex flex-wrap items-center justify-between gap-3 border-b p-4 last:border-0; }
+  .converter-item > div:first-child { @apply flex min-w-0 flex-1 flex-col; }
+  .converter-item strong { @apply truncate text-sm; }
+  .converter-item small { @apply mt-1 text-xs text-muted-foreground; }
+  .converter-item > div:last-child { @apply flex flex-wrap gap-2; }
+  .panorama-empty-workspace { @apply grid min-h-[calc(100vh-190px)] place-items-center p-5; }
+  .panorama-empty-workspace > div { @apply w-full max-w-xl text-center; }
+  .panorama-empty-workspace h1 { @apply text-3xl font-bold tracking-tight; }
+  .panorama-empty-workspace > div > p { @apply mb-6 mt-2 text-sm text-muted-foreground; }
+  .panorama-upload-card { @apply overflow-hidden border-dashed bg-white/80 p-2 shadow-sm; }
+  .panorama-upload-label { @apply block rounded-lg border-2 border-dashed border-primary/25 p-10 text-center transition-colors hover:border-primary hover:bg-primary/5; }
+  .panorama-workbench { @apply mx-auto max-w-[1600px] space-y-3 p-3 lg:p-5; }
+  .panorama-toolbar { @apply flex items-center gap-2 overflow-x-auto rounded-xl border bg-white p-2 shadow-sm; }
+  .panorama-toolbar > button { @apply shrink-0 gap-1.5; }
+  .panorama-toolbar svg { @apply h-4 w-4; }
+  .panorama-title { @apply mr-auto flex shrink-0 items-center gap-2 px-2; }
+  .panorama-title h1 { @apply text-lg font-bold; }
+  .panorama-title span { @apply rounded-full bg-muted px-2 py-1 text-[11px] text-muted-foreground; }
+  .panorama-add-control { @apply shrink-0 border-0 bg-transparent p-0 shadow-none; }
+  .panorama-add-label { @apply flex h-9 items-center gap-2 rounded-md border bg-white px-3 text-sm font-medium hover:bg-muted; }
+  .panorama-output-settings { @apply flex shrink-0 items-center gap-1.5; }
+  .panorama-output-settings input { @apply h-9 w-36; }
+  .panorama-output-settings > button { @apply gap-1.5; }
+  .panorama-output-settings [role="combobox"] { @apply w-24; }
+  .panorama-order-strip-wrap { @apply overflow-x-auto rounded-xl border bg-white p-2; }
+  .panorama-order-strip { @apply flex w-max min-w-full gap-2; }
+  .panorama-order-item { @apply flex shrink-0 items-center rounded-lg border bg-slate-50 p-1 transition-colors; }
+  .panorama-order-item.selected { @apply border-orange-400 bg-orange-50 ring-1 ring-orange-200; }
+  .panorama-order-select { @apply flex min-w-0 items-center gap-2 rounded-md p-1.5 text-left; }
+  .panorama-order-select > span { @apply grid h-5 w-5 shrink-0 place-items-center rounded bg-white text-[10px] font-bold; }
+  .panorama-order-select img { @apply h-9 w-9 rounded object-cover; }
+  .panorama-order-select strong { @apply max-w-28 truncate text-xs; }
+  .panorama-order-actions { @apply ml-1 flex items-center; }
+  .panorama-order-actions button { @apply h-7 w-7; }
+  .panorama-order-actions svg { @apply h-3.5 w-3.5; }
+  .panorama-main { @apply space-y-3; }
+  .direct-crop-editor { @apply rounded-xl border bg-slate-900 p-3 shadow-sm; }
+  .direct-crop-heading { @apply mb-3 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-300; }
+  .direct-crop-heading strong { @apply max-w-md truncate text-sm text-white; }
+  .direct-crop-stage { @apply relative mx-auto w-full max-w-[960px] touch-none overflow-hidden bg-slate-950; }
+  .direct-crop-stage > img { @apply block h-full w-full select-none object-contain; }
+  .direct-crop-frame { @apply absolute z-10 cursor-move touch-none border-2 border-orange-500 outline-none; box-shadow: 0 0 0 9999px rgb(2 6 23 / .62); }
+  .direct-crop-frame:focus-visible { @apply ring-2 ring-orange-300 ring-offset-2 ring-offset-slate-900; }
+  .direct-crop-handle { @apply absolute z-20 h-3.5 w-3.5 rounded-sm border-2 border-white bg-orange-500 shadow-md; }
+  .handle-n { @apply -top-2 left-1/2 -translate-x-1/2 cursor-ns-resize; }
+  .handle-s { @apply -bottom-2 left-1/2 -translate-x-1/2 cursor-ns-resize; }
+  .handle-w { @apply -left-2 top-1/2 -translate-y-1/2 cursor-ew-resize; }
+  .handle-e { @apply -right-2 top-1/2 -translate-y-1/2 cursor-ew-resize; }
+  .handle-nw { @apply -left-2 -top-2 cursor-nwse-resize; }
+  .handle-ne { @apply -right-2 -top-2 cursor-nesw-resize; }
+  .handle-sw { @apply -bottom-2 -left-2 cursor-nesw-resize; }
+  .handle-se { @apply -bottom-2 -right-2 cursor-nwse-resize; }
+  .panorama-preview-panel { @apply min-w-0 rounded-xl border bg-slate-100; }
+  .panorama-preview-toolbar { @apply flex flex-wrap items-center justify-between gap-2 border-b bg-white p-3 text-xs text-muted-foreground; }
+  .panorama-preview-toolbar > div { @apply flex gap-1; }
+  .panorama-preview-toolbar svg { @apply h-4 w-4; }
+  .panorama-scroll { @apply max-h-[75vh] overflow-auto p-4; }
+  .panorama-canvas { @apply mx-auto overflow-hidden bg-transparent shadow-xl; }
+  .panorama-region { @apply relative block w-full overflow-hidden border-0 p-0; }
+  .panorama-region:disabled { @apply opacity-100; }
+  .panorama-region.selected { @apply z-10 ring-2 ring-inset ring-orange-500; }
+  .panorama-region img { @apply absolute max-w-none; }
+  .panorama-empty { @apply grid min-h-[420px] place-items-center rounded-xl border border-dashed bg-muted/30 p-8 text-center text-sm text-muted-foreground; }
+  @media (max-width: 700px) { .panorama-toolbar { @apply rounded-none border-x-0; } .panorama-title { @apply mr-2; } .panorama-output-settings input { @apply w-28; } .direct-crop-editor { @apply rounded-lg p-2; } }
+
+  .pdf-editor-page { @apply min-h-[calc(100vh-65px)] bg-slate-100; }
+  .editor-commandbar { @apply sticky top-16 z-40 flex flex-wrap items-center gap-3 border-b bg-white/95 px-4 py-3 shadow-sm backdrop-blur lg:flex-nowrap; }
+  .editor-file { @apply mr-auto flex min-w-48 items-center gap-3; }
+  .editor-file > svg { @apply h-9 w-9 rounded-lg bg-primary/10 p-2 text-primary; }
+  .editor-file > span { @apply flex min-w-0 flex-col; }
+  .editor-file strong { @apply text-sm; }
+  .editor-file small { @apply max-w-52 truncate text-[11px] text-muted-foreground; }
+  .editor-tools { @apply order-3 flex w-full items-center gap-1 overflow-x-auto lg:order-none lg:w-auto; }
+  .editor-tools button { @apply shrink-0 gap-1.5; }
+  .editor-tools svg, .editor-commandbar > button svg { @apply h-4 w-4; }
+  .editor-zoom { @apply mx-1 flex shrink-0 items-center gap-0.5 rounded-lg border bg-slate-50 p-0.5; }
+  .editor-zoom > span { @apply w-12 text-center text-xs font-semibold tabular-nums text-foreground; }
+  .editor-zoom button { @apply h-8; }
+  .editor-tool-label { @apply flex h-9 shrink-0 cursor-pointer items-center gap-1.5 rounded-md px-3 text-sm font-medium hover:bg-accent; }
+  .editor-tool-label svg { @apply h-4 w-4; }
+  .editor-tool-label input { @apply hidden; }
+  .editor-tool-label.stamp-upload { @apply text-red-700 hover:bg-red-50; }
+  .pdf-editor-layout { @apply grid min-h-[calc(100vh-130px)] grid-cols-1 lg:grid-cols-[126px_minmax(500px,1fr)_292px]; }
+  .editor-pages { @apply hidden max-h-[calc(100vh-130px)] space-y-2 overflow-y-auto border-r bg-slate-50 p-3 lg:block; }
+  .editor-pages > button { @apply flex w-full items-center gap-2 rounded-lg border border-transparent px-2 py-2 text-left hover:bg-white; }
+  .editor-pages > button span { @apply grid h-8 w-8 place-items-center rounded-md bg-white text-xs font-bold shadow-sm; }
+  .editor-pages > button small { @apply text-[11px] text-muted-foreground; }
+  .editor-pages > button.active { @apply border-primary/30 bg-white text-primary shadow-sm; }
+  .editor-center { @apply flex min-w-0 flex-col items-center bg-slate-200/70 p-4; }
+  .editor-stage-viewport { @apply flex max-h-[calc(100vh-210px)] w-full flex-1 items-start justify-center overflow-auto rounded-lg; }
+  .editor-stage { @apply relative max-w-none shrink-0 bg-white shadow-[0_12px_40px_rgba(15,23,42,.2)]; margin-inline: auto; }
+  .editor-stage > canvas { @apply block h-auto max-w-none bg-white object-contain; }
+  .editor-overlay { @apply absolute inset-0; }
+  .editor-overlay.redaction-mode { @apply cursor-crosshair touch-none; }
+  .editor-overlay.redaction-mode .editor-object { pointer-events: none; }
+  .editor-object { @apply absolute cursor-move border border-transparent touch-none; }
+  .editor-object.seam-stamp-slice { @apply cursor-pointer; }
+  .editor-object.selected { @apply border-primary ring-2 ring-primary/20; }
+  .editor-object.low-confidence { @apply border-amber-500 border-dashed; }
+  .editor-object textarea { @apply h-full w-full resize-none overflow-hidden border-0 p-1 leading-tight outline-none ring-0; }
+  .editor-object img { @apply h-full w-full select-none object-contain; }
+  .redaction-fill { @apply h-full min-h-3 w-full; }
+  .redaction-draft { @apply pointer-events-none absolute z-20 border-2 border-dashed border-blue-500 opacity-80; }
+  .object-drag-handle { @apply absolute -top-6 right-0 hidden rounded bg-primary px-1.5 py-0.5 text-[9px] font-semibold text-white; }
+  .editor-object.selected .object-drag-handle { @apply block; }
+  .stamp-resize-handle { @apply absolute z-30 h-3 w-3 rounded-full border-2 border-white bg-primary shadow; }
+  .stamp-resize-handle.top-left { @apply -left-1.5 -top-1.5 cursor-nwse-resize; }
+  .stamp-resize-handle.top-right { @apply -right-1.5 -top-1.5 cursor-nesw-resize; }
+  .stamp-resize-handle.bottom-left { @apply -bottom-1.5 -left-1.5 cursor-nesw-resize; }
+  .stamp-resize-handle.bottom-right { @apply -bottom-1.5 -right-1.5 cursor-nwse-resize; }
+  .editor-page-nav { @apply mt-3 flex items-center gap-4 text-xs font-medium text-muted-foreground; }
+  .editor-properties { @apply max-h-[calc(100vh-130px)] space-y-3 overflow-y-auto border-l bg-white p-3; }
+  .editor-properties section { @apply space-y-3 rounded-xl border bg-white p-4; }
+  .editor-properties h3 { @apply flex items-center gap-2 text-sm font-semibold; }
+  .editor-properties h3 svg { @apply h-4 w-4 text-primary; }
+  .editor-properties label { @apply grid grid-cols-[1fr_auto] items-center gap-2 text-xs font-medium text-muted-foreground; }
+  .editor-properties label > span { @apply tabular-nums text-foreground; }
+  .editor-properties label input[type="range"] { @apply col-span-2 w-full accent-blue-600; }
+  .editor-properties label .h-10 { @apply col-span-2; }
+  .editor-properties select { @apply col-span-2 h-9 rounded-md border bg-white px-2 text-foreground; }
+  .editor-properties .check-row { @apply flex items-center; }
+  .editor-properties .check-row input { @apply h-4 w-4 accent-blue-600; }
+  .editor-properties .watermark-panel { @apply border-primary/20; }
+  .editor-properties .watermark-field { @apply block; }
+  .watermark-field > span { @apply mb-2 block text-xs font-medium text-muted-foreground; }
+  .watermark-field > input { @apply mt-2 w-full; }
+  .watermark-colors { @apply flex flex-wrap items-center gap-2; }
+  .watermark-colors button { @apply h-9 w-9 rounded-md border-2 border-white shadow-sm ring-1 ring-border transition-transform hover:scale-105; }
+  .watermark-colors button.active { @apply ring-2 ring-primary ring-offset-2; }
+  .watermark-colors input[type="color"] { @apply h-9 w-11 cursor-pointer rounded-md border p-1; }
+  .watermark-positions { @apply grid grid-cols-2 gap-1.5; }
+  .watermark-positions button { @apply rounded-md border bg-muted/60 px-2 py-2 text-[11px] font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground; }
+  .watermark-positions button.active { @apply border-primary bg-primary text-primary-foreground; }
+  .watermark-positions button:disabled { @apply cursor-not-allowed opacity-40; }
+  .editor-properties .watermark-check { @apply flex items-center gap-2 rounded-lg bg-muted/50 p-3 text-foreground; }
+  .watermark-check input { @apply h-4 w-4 accent-blue-600; }
+  .watermark-actions { @apply grid grid-cols-2 gap-2 pt-1; }
+  .redaction-colors { @apply space-y-2 rounded-lg bg-muted/50 p-3; }
+  .redaction-colors > span { @apply text-xs font-medium text-muted-foreground; }
+  .redaction-colors > div { @apply grid grid-cols-2 gap-2; }
+  .redaction-colors button { @apply flex items-center justify-center gap-2 rounded-md border bg-white px-3 py-2 text-xs font-semibold; }
+  .redaction-colors button.active { @apply border-primary ring-2 ring-primary/20; }
+  .redaction-colors button i { @apply h-4 w-4 rounded-sm border; }
+  .redaction-colors p { @apply text-[11px] leading-4 text-muted-foreground; }
+  .stamp-settings { @apply space-y-2 rounded-lg border border-red-100 bg-red-50/60 p-3; }
+  .stamp-settings label { @apply grid; }
+  .stamp-settings p { @apply text-[11px] leading-4 text-muted-foreground; }
+  .stamp-size-control { @apply space-y-2 rounded-lg border bg-muted/30 p-3; }
+  .stamp-size-heading { @apply flex items-center justify-between text-xs font-medium text-muted-foreground; }
+  .stamp-size-heading small { @apply rounded bg-white px-2 py-1 text-[10px] text-foreground shadow-sm; }
+  .stamp-size-actions { @apply grid grid-cols-[2.25rem_1fr_auto_2.25rem] items-center gap-1.5; }
+  .stamp-size-actions button { @apply h-9 w-9 p-0; }
+  .stamp-size-actions button svg { @apply h-4 w-4; }
+  .stamp-size-actions input { @apply h-9 text-center tabular-nums; }
+  .stamp-size-control > input[type="range"] { @apply w-full accent-blue-600; }
+  .stamp-size-control > button { @apply w-full gap-2; }
+  .seam-stamp-panel { @apply border-red-200 bg-red-50/40 !important; }
+  .seam-page-range { @apply grid grid-cols-2 gap-2; }
+  .seam-page-range label { @apply block; }
+  .seam-page-range input { @apply mt-1; }
+  .seam-stamp-upload { @apply flex cursor-pointer items-center justify-center rounded-md bg-red-700 px-3 py-2.5 text-sm font-semibold text-white hover:bg-red-800; }
+  .seam-stamp-upload input { @apply hidden; }
+  .seam-stamp-upload.disabled { @apply cursor-wait opacity-60; }
+  .seam-stamp-panel > p { @apply text-[11px] leading-4 text-muted-foreground; }
+  .unified-seam-options { @apply space-y-3 rounded-lg border border-red-100 bg-white/70 p-3; }
+  .seam-side-options { @apply grid grid-cols-2 gap-2; }
+  .seam-slice-note { @apply space-y-1 rounded-lg border border-red-100 bg-red-50 p-3 text-xs text-red-900; }
+  .seam-slice-note p { @apply text-[11px] leading-4 text-muted-foreground; }
+  .editor-note { @apply border-primary/20 bg-primary/5 !important; }
+  .editor-note p { @apply text-xs leading-5 text-muted-foreground; }
+
+  @media (max-width: 700px) {
+    .nav-inner { @apply flex-col items-stretch gap-2 py-3; }
+    .brand { @apply px-1; }
+    .primary-nav { @apply overflow-x-auto; }
+    .primary-nav-link { @apply shrink-0; }
+    .sub-nav { @apply px-4; }
+    .tool-page { @apply py-5; }
+    .page-intro h1 { @apply text-3xl; }
+    .pdf-scroll { @apply p-3; }
+    .editor-commandbar { @apply top-[121px]; }
+    .pdf-editor-layout { @apply block; }
+    .editor-center { @apply min-h-[70vh]; }
+    .editor-properties { @apply max-h-none border-l-0 border-t; }
+  }
+}
